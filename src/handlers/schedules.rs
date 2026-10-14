@@ -78,11 +78,16 @@ pub async fn create_report_schedule(
     .await?;
 
     if !matches!(req.interval.as_str(), "daily" | "weekly" | "monthly") {
-        return Err((StatusCode::BAD_REQUEST, "interval must be daily|weekly|monthly".into()));
+        return Err((
+            StatusCode::BAD_REQUEST,
+            "interval must be daily|weekly|monthly".into(),
+        ));
     }
 
     let mut conn = state.pool.begin().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
     let id = Uuid::new_v4();
     let row = sqlx::query(
@@ -137,7 +142,9 @@ pub async fn list_report_schedules(
     .await?;
 
     let mut conn = state.pool.acquire().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
     let rows = sqlx::query(
         "SELECT id, report_type_id, interval, enabled, created_at \
@@ -178,7 +185,9 @@ pub async fn patch_report_schedule(
     .await?;
 
     let mut conn = state.pool.begin().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
     let row = sqlx::query(
         "UPDATE reporting.report_schedules SET enabled = $1 \
@@ -233,16 +242,17 @@ pub async fn delete_report_schedule(
     .await?;
 
     let mut conn = state.pool.begin().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
-    let result = sqlx::query(
-        "DELETE FROM reporting.report_schedules WHERE id = $1 AND env_id = $2",
-    )
-    .bind(id)
-    .bind(a.env_id())
-    .execute(&mut *conn)
-    .await
-    .map_err(err_db)?;
+    let result =
+        sqlx::query("DELETE FROM reporting.report_schedules WHERE id = $1 AND env_id = $2")
+            .bind(id)
+            .bind(a.env_id())
+            .execute(&mut *conn)
+            .await
+            .map_err(err_db)?;
     if result.rows_affected() == 0 {
         return Err((StatusCode::NOT_FOUND, "schedule not found".into()));
     }
@@ -283,7 +293,9 @@ pub async fn run_report_schedules(
     let a = auth::verify_token(&state.config, &headers).await?;
 
     let mut conn = state.pool.begin().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
     let schedules = sqlx::query(
         "SELECT id, report_type_id, interval FROM reporting.report_schedules WHERE enabled",
@@ -301,18 +313,9 @@ pub async fn run_report_schedules(
 
         // The current period window for the interval.
         let (period_start, period_end) = match interval.as_str() {
-            "daily" => (
-                now - Duration::hours(24),
-                now,
-            ),
-            "weekly" => (
-                now - Duration::days(7),
-                now,
-            ),
-            _ => (
-                now - Duration::days(30),
-                now,
-            ),
+            "daily" => (now - Duration::hours(24), now),
+            "weekly" => (now - Duration::days(7), now),
+            _ => (now - Duration::days(30), now),
         };
 
         // Idempotent per (env, type, period): ON CONFLICT DO NOTHING —
@@ -329,7 +332,10 @@ pub async fn run_report_schedules(
         .bind(report_type_id)
         .bind(period_start)
         .bind(period_end)
-        .bind(format!("report-schedule-{schedule_id}-{}", now.format("%Y%m%d%H")))
+        .bind(format!(
+            "report-schedule-{schedule_id}-{}",
+            now.format("%Y%m%d%H")
+        ))
         .fetch_optional(&mut *conn)
         .await
         .map_err(err_db)?;

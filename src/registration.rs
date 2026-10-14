@@ -11,15 +11,13 @@ use sentin8::registration::{
 };
 use utoipa::OpenApi;
 
-const PG_ROLES: &[PgRole] = &[
-    PgRole {
-        scope: "bill8:reporting:read,bill8:reporting:write",
-        role: "bill8_reporting_service",
-        bypass_rls: false,
-        database: "bill8",
-        cross_schema_grants: &[],
-    },
-];
+const PG_ROLES: &[PgRole] = &[PgRole {
+    scope: "bill8:reporting:read,bill8:reporting:write",
+    role: "bill8_reporting_service",
+    bypass_rls: false,
+    database: "bill8",
+    cross_schema_grants: &[],
+}];
 
 const M2M_GRANTS: &[M2mGrant] = &[
     M2mGrant {
@@ -59,23 +57,67 @@ const M2M_GRANTS: &[M2mGrant] = &[
 ];
 
 const ADMIN_SCOPES: &[AdminScope] = &[
-    AdminScope::Typed { role: "bill8:reporting:admin", scope: "bill8:reporting:types:read" },
-    AdminScope::Typed { role: "bill8:reporting:admin", scope: "bill8:reporting:types:write" },
-    AdminScope::Typed { role: "bill8:reporting:admin", scope: "bill8:reporting:runs:read" },
-    AdminScope::Typed { role: "bill8:reporting:admin", scope: "bill8:reporting:runs:write" },
-    AdminScope::Typed { role: "bill8:reporting:admin", scope: "bill8:reporting:policy:read" },
-    AdminScope::Typed { role: "bill8:reporting:admin", scope: "bill8:reporting:policy:write" },
+    AdminScope::Typed {
+        role: "bill8:reporting:admin",
+        scope: "bill8:reporting:types:read",
+    },
+    AdminScope::Typed {
+        role: "bill8:reporting:admin",
+        scope: "bill8:reporting:types:write",
+    },
+    AdminScope::Typed {
+        role: "bill8:reporting:admin",
+        scope: "bill8:reporting:runs:read",
+    },
+    AdminScope::Typed {
+        role: "bill8:reporting:admin",
+        scope: "bill8:reporting:runs:write",
+    },
+    AdminScope::Typed {
+        role: "bill8:reporting:admin",
+        scope: "bill8:reporting:policy:read",
+    },
+    AdminScope::Typed {
+        role: "bill8:reporting:admin",
+        scope: "bill8:reporting:policy:write",
+    },
 ];
 
 const ERROR_CODES: &[ErrorCode] = &[
-    ErrorCode { enum_name: "ReportingRunNotFound", error_code: "reporting_run_not_found", status_code: 404 },
-    ErrorCode { enum_name: "ReportingTypeNotFound", error_code: "reporting_type_not_found", status_code: 404 },
+    ErrorCode {
+        enum_name: "ReportingRunNotFound",
+        error_code: "reporting_run_not_found",
+        status_code: 404,
+    },
+    ErrorCode {
+        enum_name: "ReportingTypeNotFound",
+        error_code: "reporting_type_not_found",
+        status_code: 404,
+    },
 ];
 
 const ADMIN_UI_PAGES: &[AdminUiPage] = &[
-    AdminUiPage { route: "overview", label: "Overview", ui_endpoint: "/v1/admin/ui/overview", data_endpoint: "/v1/admin/overview", icon: "0xe1b1" },
-    AdminUiPage { route: "report-types", label: "Report Types", ui_endpoint: "/v1/admin/ui/report-types", data_endpoint: "/v1/admin/report-types", icon: "0xe873" },
-    AdminUiPage { route: "report-runs", label: "Report Runs", ui_endpoint: "/v1/admin/ui/report-runs", data_endpoint: "/v1/admin/report-runs", icon: "0xf0c6" },
+    AdminUiPage {
+        route: "overview",
+        label: "Overview",
+        ui_endpoint: "/v1/admin/ui/overview",
+        data_endpoint: "/v1/admin/overview",
+        icon: "0xe1b1",
+    },
+    AdminUiPage {
+        route: "report-types",
+        label: "Report Types",
+        ui_endpoint: "/v1/admin/ui/report-types",
+        data_endpoint: "/v1/admin/report-types",
+        icon: "0xe873",
+    },
+    AdminUiPage {
+        route: "report-runs",
+        label: "Report Runs",
+        ui_endpoint: "/v1/admin/ui/report-runs",
+        data_endpoint: "/v1/admin/report-runs",
+        icon: "0xf0c6",
+    },
 ];
 
 /// The scope-mirror Shield text.
@@ -93,7 +135,8 @@ const POLICIES: &[PolicySetDecl] = &[PolicySetDecl {
 const SQL_1_INIT: &str = include_str!("../sql/init.sql");
 
 fn openapi_spec() -> serde_json::Value {
-    serde_json::to_value(crate::openapi::ReportingOpenApi::openapi()).unwrap_or(serde_json::Value::Null)
+    serde_json::to_value(crate::openapi::ReportingOpenApi::openapi())
+        .unwrap_or(serde_json::Value::Null)
 }
 
 /// Print the registration JSON to stdout.
@@ -116,7 +159,11 @@ pub fn print(section: Option<String>) -> anyhow::Result<()> {
             service_flag: "reporting",
             pages: ADMIN_UI_PAGES,
         }),
-        sql_migrations: vec![SqlMigration { version: 1, name: "init", sql: SQL_1_INIT }],
+        sql_migrations: vec![SqlMigration {
+            version: 1,
+            name: "init",
+            sql: SQL_1_INIT,
+        }],
         pg_roles: PG_ROLES,
         audit_findings: None,
         service_actions: None,

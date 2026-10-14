@@ -21,8 +21,8 @@ use crate::policy::Engine;
 
 pub mod schedules;
 pub use schedules::{
-    create_report_schedule, delete_report_schedule, list_report_schedules,
-    patch_report_schedule, run_report_schedules,
+    create_report_schedule, delete_report_schedule, list_report_schedules, patch_report_schedule,
+    run_report_schedules,
 };
 
 /// Shared application state bound into the shell.
@@ -85,14 +85,17 @@ pub async fn create_report_type(
         &a,
         &headers,
         sentin8::shield::EvalTarget::new("bill8:reporting:types:write"),
-    ).await?;
+    )
+    .await?;
     let name = body["name"].as_str().unwrap_or_default().trim().to_string();
     if name.is_empty() {
         return Err((StatusCode::BAD_REQUEST, "name required".into()));
     }
 
     let mut conn = state.pool.begin().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
     let id = Uuid::new_v4();
     let row = sqlx::query(
         r#"INSERT INTO reporting.report_types (id, env_id, name)
@@ -137,10 +140,13 @@ pub async fn list_report_types(
         &a,
         &headers,
         sentin8::shield::EvalTarget::new("bill8:reporting:types:read"),
-    ).await?;
+    )
+    .await?;
 
     let mut conn = state.pool.acquire().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
     let rows = sqlx::query(
         "SELECT id, env_id, name, version, created_at FROM reporting.report_types ORDER BY created_at",
@@ -187,10 +193,13 @@ pub async fn create_report_run(
         &a,
         &headers,
         sentin8::shield::EvalTarget::new("bill8:reporting:runs:write"),
-    ).await?;
+    )
+    .await?;
 
     let mut conn = state.pool.begin().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
     // Idempotent per (env, type, period): return the existing run.
     if let Ok(Some(row)) = sqlx::query(
@@ -260,10 +269,13 @@ pub async fn list_report_runs(
         &a,
         &headers,
         sentin8::shield::EvalTarget::new("bill8:reporting:runs:read"),
-    ).await?;
+    )
+    .await?;
 
     let mut conn = state.pool.acquire().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
     let rows = sqlx::query(
         "SELECT id, env_id, report_type_id, period_start, period_end, status, output_ref, created_at FROM reporting.report_runs ORDER BY created_at DESC LIMIT 200",
@@ -297,10 +309,13 @@ pub async fn get_report_run(
         &a,
         &headers,
         sentin8::shield::EvalTarget::new("bill8:reporting:runs:read"),
-    ).await?;
+    )
+    .await?;
 
     let mut conn = state.pool.acquire().await.map_err(err_db)?;
-    set_tenant_context(&mut conn, a.env_id()).await.map_err(err_db)?;
+    set_tenant_context(&mut conn, a.env_id())
+        .await
+        .map_err(err_db)?;
 
     let row = sqlx::query(
         "SELECT id, env_id, report_type_id, period_start, period_end, status, output_ref, created_at FROM reporting.report_runs WHERE id = $1",
