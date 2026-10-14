@@ -1,0 +1,15 @@
+{
+  "vertical": "bill8",
+  "services": [
+    {
+      "service_type": "bill8:reporting",
+      "event_triggers": [
+        {
+          "event_type": "sentin8:cron:tick",
+          "consumer_group": "bill8:reporting:schedules",
+          "action": "run_report_schedules"
+        }
+      ]
+    }
+  ]
+}
