@@ -9,7 +9,11 @@
           "consumer_group": "bill8:reporting:schedules",
           "action": "run_report_schedules"
         }
-      ]
+      ],
+      "telemetry_property": {
+        "slug": "reporting",
+        "name": "Bill8:Reporting Telemetry"
+      }
     }
   ]
 }
