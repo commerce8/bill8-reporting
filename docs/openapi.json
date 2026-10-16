@@ -1,0 +1,519 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "bill8-reporting",
+    "description": "Sentin8 Bill8:Reporting — report types, runs, scheduled reports.",
+    "license": {
+      "name": "MIT OR Apache-2.0",
+      "identifier": "MIT OR Apache-2.0"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/internal/report-schedules/run": {
+      "post": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`POST /v1/internal/report-schedules/run` — the Cron proxy-back\ntick. Creates one run per enabled schedule for the current period;\nthe run's (env, type, period) uniqueness (RPT-2) makes two ticks in\none window produce exactly one run.",
+        "operationId": "run_report_schedules",
+        "responses": {
+          "200": {
+            "description": "Tick processed"
+          }
+        },
+        "security": [
+          {
+            "sentin8:cron:write": []
+          }
+        ]
+      }
+    },
+    "/v1/report-runs": {
+      "get": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`GET /v1/report-runs` — list runs.",
+        "operationId": "list_report_runs",
+        "responses": {
+          "200": {
+            "description": "List of runs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportRun"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing bill8:reporting:runs:read"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:runs:read": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`POST /v1/report-runs` — run a report (idempotent per\n`(env_id, type, period)`; two identical runs yield one row).",
+        "operationId": "create_report_run",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReportRunRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Report run created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportRun"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing bill8:reporting:runs:write"
+          },
+          "409": {
+            "description": "Run already exists for this period (idempotent)"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:runs:write": []
+          }
+        ]
+      }
+    },
+    "/v1/report-runs/{id}": {
+      "get": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`GET /v1/report-runs/{id}` — read one run.",
+        "operationId": "get_report_run",
+        "responses": {
+          "200": {
+            "description": "The run",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportRun"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Run not found"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:runs:read": []
+          }
+        ]
+      }
+    },
+    "/v1/report-schedules": {
+      "get": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`GET /v1/report-schedules` — list the env's schedules.",
+        "operationId": "list_report_schedules",
+        "responses": {
+          "200": {
+            "description": "List of schedules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportSchedule"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing bill8:reporting:schedules:read"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:schedules:read": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`POST /v1/report-schedules` — create a schedule.",
+        "operationId": "create_report_schedule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReportScheduleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Schedule created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSchedule"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing bill8:reporting:schedules:write"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:schedules:write": []
+          }
+        ]
+      }
+    },
+    "/v1/report-schedules/{id}": {
+      "delete": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`DELETE /v1/report-schedules/{id}` — remove a schedule.",
+        "operationId": "delete_report_schedule",
+        "responses": {
+          "200": {
+            "description": "Schedule deleted"
+          },
+          "404": {
+            "description": "Schedule not found"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:schedules:write": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`PATCH /v1/report-schedules/{id}` — enable/disable a schedule.",
+        "operationId": "patch_report_schedule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchReportScheduleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Schedule updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSchedule"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Schedule not found"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:schedules:write": []
+          }
+        ]
+      }
+    },
+    "/v1/report-types": {
+      "get": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`GET /v1/report-types` — list report types.",
+        "operationId": "list_report_types",
+        "responses": {
+          "200": {
+            "description": "List of report types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportType"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing bill8:reporting:types:read"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:types:read": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "reporting"
+        ],
+        "summary": "`POST /v1/report-types` — create a report type.",
+        "operationId": "create_report_type",
+        "responses": {
+          "200": {
+            "description": "Report type created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportType"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Missing bill8:reporting:types:write"
+          }
+        },
+        "security": [
+          {
+            "bill8:reporting:types:write": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateReportRunRequest": {
+        "type": "object",
+        "description": "Request body for `POST /v1/report-runs`.",
+        "required": [
+          "report_type_id",
+          "period_start",
+          "period_end"
+        ],
+        "properties": {
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Caller-supplied idempotency key (a run is idempotent per\n`(env_id, report_type, period)`)."
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Reporting period end."
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Reporting period start."
+          },
+          "report_type_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The report type to run."
+          }
+        }
+      },
+      "CreateReportScheduleRequest": {
+        "type": "object",
+        "description": "Request body for schedule creation.",
+        "required": [
+          "report_type_id",
+          "interval"
+        ],
+        "properties": {
+          "interval": {
+            "type": "string",
+            "description": "Run interval (`daily` / `weekly` / `monthly`)."
+          },
+          "report_type_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The report type to schedule."
+          }
+        }
+      },
+      "PatchReportScheduleRequest": {
+        "type": "object",
+        "description": "Request body for schedule patching (enable/disable).",
+        "required": [
+          "enabled"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Enable/disable the schedule."
+          }
+        }
+      },
+      "ReportRun": {
+        "type": "object",
+        "description": "An execution of a report type for a period.",
+        "required": [
+          "id",
+          "env_id",
+          "report_type_id",
+          "period_start",
+          "period_end",
+          "status",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp."
+          },
+          "env_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Owning tenant environment."
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Run id."
+          },
+          "output_ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Output-file Storage reference (never inline content)."
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Reporting period end."
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Reporting period start."
+          },
+          "report_type_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The executed report type."
+          },
+          "status": {
+            "type": "string",
+            "description": "Lifecycle state (`pending` / `succeeded` / `failed`)."
+          }
+        }
+      },
+      "ReportSchedule": {
+        "type": "object",
+        "description": "The schedule wire shape.",
+        "required": [
+          "id",
+          "report_type_id",
+          "interval",
+          "enabled",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp."
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the schedule fires."
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Schedule id."
+          },
+          "interval": {
+            "type": "string",
+            "description": "Run interval."
+          },
+          "report_type_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The scheduled report type."
+          }
+        }
+      },
+      "ReportType": {
+        "type": "object",
+        "description": "A versioned report definition.",
+        "required": [
+          "id",
+          "env_id",
+          "name",
+          "version",
+          "created_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp."
+          },
+          "env_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Owning tenant environment."
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Report-type id."
+          },
+          "name": {
+            "type": "string",
+            "description": "Machine name (`charges_summary` / `refunds_summary` /\n`payouts_summary` / `balance_history`)."
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Definition version."
+          }
+        }
+      }
+    }
+  }
+}
