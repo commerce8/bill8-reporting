@@ -12,6 +12,7 @@ use crate::handlers;
 /// The reporting service's OpenAPI document.
 #[derive(OpenApi)]
 #[openapi(paths(
+    handlers::health,
     handlers::create_report_type,
     handlers::list_report_types,
     handlers::create_report_run,
