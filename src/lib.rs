@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Bill8:Reporting
 // SPDX-License-Identifier: Apache-2.0
 
-//! # Bill8:Reporting — reports
+//! # Bill8:Reporting - reports
 //!
 //! Report types and runs. A run is idempotent per `(env_id, report_type,
 //! period)`; output files are Storage references, never inline. See

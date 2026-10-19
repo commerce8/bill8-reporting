@@ -3,7 +3,7 @@
 -- SPDX-FileCopyrightText: Copyright Contributors to the Bill8:Reporting
 -- SPDX-License-Identifier: Apache-2.0
 
--- Bill8:Reporting — the service's own schema `reporting`: report
+-- Bill8:Reporting - the service's own schema `reporting`: report
 -- types and runs. Output files are Storage references, never inline.
 
 CREATE SCHEMA IF NOT EXISTS reporting;

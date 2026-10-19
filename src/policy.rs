@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Bill8:Reporting
 // SPDX-License-Identifier: Apache-2.0
 
-//! Shield policy integration for Bill8:Reporting — step 5 is the
+//! Shield policy integration for Bill8:Reporting - step 5 is the
 //! ONLY gate.
 
 #[allow(unused_imports)]

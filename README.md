@@ -1,4 +1,4 @@
-# Bill8:Reporting — Reports
+# Bill8:Reporting - Reports
 
 Report types, report runs, and scheduled reports.
 
@@ -27,8 +27,8 @@ graph TD
 
 ## 4. Key Traits and Data Structures
 
-- `ReportType` — a named report definition with a versioned query shape.
-- `ReportRun` — an execution of a type with a status
+- `ReportType` - a named report definition with a versioned query shape.
+- `ReportRun` - an execution of a type with a status
   (`pending` → `succeeded` / `failed`) and an output reference.
 
 ## 5. Rationale, Trade-offs, and Alternatives

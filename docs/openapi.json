@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "bill8-reporting",
-    "description": "Sentin8 Bill8:Reporting — report types, runs, scheduled reports.",
+    "description": "Sentin8 Bill8:Reporting - report types, runs, scheduled reports.",
     "license": {
       "name": "MIT OR Apache-2.0",
       "identifier": "MIT OR Apache-2.0"
@@ -35,7 +35,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`POST /v1/internal/report-schedules/run` — the Cron proxy-back\ntick. Creates one run per enabled schedule for the current period;\nthe run's (env, type, period) uniqueness (RPT-2) makes two ticks in\none window produce exactly one run.",
+        "summary": "`POST /v1/internal/report-schedules/run` - the Cron proxy-back\ntick. Creates one run per enabled schedule for the current period;\nthe run's (env, type, period) uniqueness (RPT-2) makes two ticks in\none window produce exactly one run.",
         "operationId": "run_report_schedules",
         "responses": {
           "200": {
@@ -54,7 +54,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`GET /v1/report-runs` — list runs.",
+        "summary": "`GET /v1/report-runs` - list runs.",
         "operationId": "list_report_runs",
         "responses": {
           "200": {
@@ -84,7 +84,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`POST /v1/report-runs` — run a report (idempotent per\n`(env_id, type, period)`; two identical runs yield one row).",
+        "summary": "`POST /v1/report-runs` - run a report (idempotent per\n`(env_id, type, period)`; two identical runs yield one row).",
         "operationId": "create_report_run",
         "requestBody": {
           "content": {
@@ -126,7 +126,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`GET /v1/report-runs/{id}` — read one run.",
+        "summary": "`GET /v1/report-runs/{id}` - read one run.",
         "operationId": "get_report_run",
         "responses": {
           "200": {
@@ -155,7 +155,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`GET /v1/report-schedules` — list the env's schedules.",
+        "summary": "`GET /v1/report-schedules` - list the env's schedules.",
         "operationId": "list_report_schedules",
         "responses": {
           "200": {
@@ -185,7 +185,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`POST /v1/report-schedules` — create a schedule.",
+        "summary": "`POST /v1/report-schedules` - create a schedule.",
         "operationId": "create_report_schedule",
         "requestBody": {
           "content": {
@@ -224,7 +224,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`DELETE /v1/report-schedules/{id}` — remove a schedule.",
+        "summary": "`DELETE /v1/report-schedules/{id}` - remove a schedule.",
         "operationId": "delete_report_schedule",
         "responses": {
           "200": {
@@ -244,7 +244,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`PATCH /v1/report-schedules/{id}` — enable/disable a schedule.",
+        "summary": "`PATCH /v1/report-schedules/{id}` - enable/disable a schedule.",
         "operationId": "patch_report_schedule",
         "requestBody": {
           "content": {
@@ -283,7 +283,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`GET /v1/report-types` — list report types.",
+        "summary": "`GET /v1/report-types` - list report types.",
         "operationId": "list_report_types",
         "responses": {
           "200": {
@@ -313,7 +313,7 @@
         "tags": [
           "reporting"
         ],
-        "summary": "`POST /v1/report-types` — create a report type.",
+        "summary": "`POST /v1/report-types` - create a report type.",
         "operationId": "create_report_type",
         "responses": {
           "200": {

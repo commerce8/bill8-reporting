@@ -1,4 +1,4 @@
-# Bill8:Reporting — Business Requirements & Functionality
+# Bill8:Reporting - Business Requirements & Functionality
 
 > Audience: product owners, business analysts, and anyone evaluating what
 > Bill8:Reporting **does for the business**. For architecture read
@@ -8,9 +8,9 @@
 
 Bill8:Reporting is the **reporting surface**. It delivers:
 
-- **Consistent reports** — report types define a query shape, and runs
+- **Consistent reports** - report types define a query shape, and runs
   snapshot data at a point in time.
-- **Scheduled delivery** — scheduled reports deliver output files.
+- **Scheduled delivery** - scheduled reports deliver output files.
 
 ## 2. Business Scope (What the Service Provides)
 

@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Bill8:Reporting
 // SPDX-License-Identifier: Apache-2.0
 
-//! Reporting HTTP handlers — report types and runs. A run is idempotent
+//! Reporting HTTP handlers - report types and runs. A run is idempotent
 //! per `(env_id, report_type, period)`; output files are Storage
 //! references, never inline.
 
@@ -34,7 +34,7 @@ pub struct AppState {
     pub pool: sqlx::PgPool,
     /// M2M-backed Bus client.
     pub bus_client: sentin8::bus::client::BusClient,
-    /// Shield policy engine — step 5 is the ONLY gate.
+    /// Shield policy engine - step 5 is the ONLY gate.
     pub policy: Arc<Engine>,
 }
 
@@ -72,7 +72,7 @@ pub async fn health() -> axum::Json<serde_json::Value> {
         "version": sentin8::build_info::id(), "build": sentin8::build_info::build_hash() }))
 }
 
-/// `POST /v1/report-types` — create a report type.
+/// `POST /v1/report-types` - create a report type.
 #[utoipa::path(
     post,
     path = "/v1/report-types",
@@ -128,7 +128,7 @@ pub async fn create_report_type(
     }))
 }
 
-/// `GET /v1/report-types` — list report types.
+/// `GET /v1/report-types` - list report types.
 #[utoipa::path(
     get,
     path = "/v1/report-types",
@@ -177,7 +177,7 @@ pub async fn list_report_types(
     ))
 }
 
-/// `POST /v1/report-runs` — run a report (idempotent per
+/// `POST /v1/report-runs` - run a report (idempotent per
 /// `(env_id, type, period)`; two identical runs yield one row).
 #[utoipa::path(
     post,
@@ -257,7 +257,7 @@ pub async fn create_report_run(
     Ok(Json(row_to_run(&row)))
 }
 
-/// `GET /v1/report-runs` — list runs.
+/// `GET /v1/report-runs` - list runs.
 #[utoipa::path(
     get,
     path = "/v1/report-runs",
@@ -296,7 +296,7 @@ pub async fn list_report_runs(
     Ok(Json(rows.iter().map(row_to_run).collect()))
 }
 
-/// `GET /v1/report-runs/{id}` — read one run.
+/// `GET /v1/report-runs/{id}` - read one run.
 #[utoipa::path(
     get,
     path = "/v1/report-runs/{id}",

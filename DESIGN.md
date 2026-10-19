@@ -1,4 +1,4 @@
-# Bill8:Reporting — Detailed Design Document
+# Bill8:Reporting - Detailed Design Document
 
 ## 1. Scope & Context
 
@@ -70,9 +70,9 @@ stateDiagram-v2
 ```
 
 **Producer tables** (platform contracts, `reporting` leaf schema):
-`reporting.outbox` (DBX producer path — architecture-principles §6.7)
+`reporting.outbox` (DBX producer path - architecture-principles §6.7)
 and `reporting.audit_journal` (the 15-column contract of
-`sentin8_audit::audit_journal_sql`, AUDJOUR-1 — env-pinned RLS, drained
+`sentin8_audit::audit_journal_sql`, AUDJOUR-1 - env-pinned RLS, drained
 to Sys `POST /v1/audit` by the shell's boot-8c pusher).
 
 ## 4. API Surface
@@ -81,7 +81,7 @@ to Sys `POST /v1/audit` by the shell's boot-8c pusher).
 |---|---|---|---|
 | Report types | `/v1/report-types` | `bill8:reporting:types:{read,write}` | `report_type:created` |
 | Report runs | `/v1/report-runs` | `bill8:reporting:runs:{read,write}` | `report_run:created/succeeded/failed` |
-| Internal | `/v1/internal/*` | M2M | — |
+| Internal | `/v1/internal/*` | M2M | - |
 
 ## 5. Cross-Cutting Concerns
 
@@ -115,8 +115,8 @@ flowchart TD
 
 ```mermaid
 graph TD
-    U["Unit — aggregation, period bucketing"] --> I["Integration — DB-backed run suites"]
-    I --> E["E2E — e2e-ts UI + BFF proxy only"]
+    U["Unit - aggregation, period bucketing"] --> I["Integration - DB-backed run suites"]
+    I --> E["E2E - e2e-ts UI + BFF proxy only"]
 ```
 
 ## 10. Open Questions

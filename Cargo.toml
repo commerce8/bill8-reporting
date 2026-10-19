@@ -10,7 +10,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/commerce8/bill8-reporting"
 rust-version = "1.85"
-description = "Sentin8 Bill8:Reporting — report types, runs, scheduled reports."
+description = "Sentin8 Bill8:Reporting - report types, runs, scheduled reports."
 
 [[bin]]
 name = "bill8-reporting"

@@ -5,7 +5,7 @@
 
 //! Report-schedule handlers (RPT-3): a Cron schedule per
 //! (report type, period) → the proxy-back run. A schedule produces at
-//! most one run per period — the run handler's
+//! most one run per period - the run handler's
 //! `(env, type, period_start, period_end)` uniqueness (RPT-2) makes
 //! two Cron fires in one window produce exactly one run (reporting
 //! DESIGN.md §2/§4).
@@ -51,7 +51,7 @@ pub struct PatchReportScheduleRequest {
     pub enabled: bool,
 }
 
-/// `POST /v1/report-schedules` — create a schedule.
+/// `POST /v1/report-schedules` - create a schedule.
 #[utoipa::path(
     post,
     path = "/v1/report-schedules",
@@ -117,7 +117,7 @@ pub async fn create_report_schedule(
     Ok(Json(row_to_schedule(&row)))
 }
 
-/// `GET /v1/report-schedules` — list the env's schedules.
+/// `GET /v1/report-schedules` - list the env's schedules.
 #[utoipa::path(
     get,
     path = "/v1/report-schedules",
@@ -157,7 +157,7 @@ pub async fn list_report_schedules(
     Ok(Json(rows.iter().map(row_to_schedule).collect()))
 }
 
-/// `PATCH /v1/report-schedules/{id}` — enable/disable a schedule.
+/// `PATCH /v1/report-schedules/{id}` - enable/disable a schedule.
 #[utoipa::path(
     patch,
     path = "/v1/report-schedules/{id}",
@@ -216,7 +216,7 @@ pub async fn patch_report_schedule(
     Ok(Json(row_to_schedule(&row)))
 }
 
-/// `DELETE /v1/report-schedules/{id}` — remove a schedule.
+/// `DELETE /v1/report-schedules/{id}` - remove a schedule.
 #[utoipa::path(
     delete,
     path = "/v1/report-schedules/{id}",
@@ -271,7 +271,7 @@ pub async fn delete_report_schedule(
     Ok(Json(serde_json::json!({ "deleted": true })))
 }
 
-/// `POST /v1/internal/report-schedules/run` — the Cron proxy-back
+/// `POST /v1/internal/report-schedules/run` - the Cron proxy-back
 /// tick. Creates one run per enabled schedule for the current period;
 /// the run's (env, type, period) uniqueness (RPT-2) makes two ticks in
 /// one window produce exactly one run.
@@ -318,7 +318,7 @@ pub async fn run_report_schedules(
             _ => (now - Duration::days(30), now),
         };
 
-        // Idempotent per (env, type, period): ON CONFLICT DO NOTHING —
+        // Idempotent per (env, type, period): ON CONFLICT DO NOTHING -
         // a second Cron fire in the window is a no-op.
         let result = sqlx::query(
             r#"INSERT INTO reporting.report_runs
