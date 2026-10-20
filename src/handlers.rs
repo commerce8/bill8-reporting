@@ -11,8 +11,8 @@ use axum::extract::{Path, State};
 use axum::http::{HeaderMap, StatusCode};
 use axum::Json;
 use bill8::reporting::contracts::{CreateReportRunRequest, ReportRun, ReportType};
-use sqlx::Row;
 use bill8::wire::contracts::HealthBuild;
+use sqlx::Row;
 use std::sync::Arc;
 use uuid::Uuid;
 
