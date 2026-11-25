@@ -13,7 +13,8 @@
       "telemetry_property": {
         "slug": "reporting",
         "name": "Bill8:Reporting Telemetry"
-      }
+      },
+      "exposure": "internal"
     }
   ]
 }
